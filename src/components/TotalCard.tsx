@@ -1,5 +1,5 @@
 import type { Expense } from "../types/index";
-
+import styles from '../styles/componet.module.css'
 type TotalCardProps = {
   expenses: Expense[];
 };
@@ -10,7 +10,7 @@ export function TotalCard({ expenses }: TotalCardProps) {
   }, 0);
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "12px", margin: "12px 0", borderRadius: "6px" }}>
+    <div className={styles.totalExp}>
       <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>Total Expenses</p>
       {totalExpenses === 0 ? (
         <h1>No expenses all cleared</h1>

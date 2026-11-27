@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Expense } from "../types/index";
+import styles from '../styles/componet.module.css'
 
 type ExpenseItemProps = {
   expense: Expense;
@@ -50,7 +51,7 @@ export function ExpenseItem({ expense, onDelete, onEdit }: ExpenseItemProps) {
   }
 
   return (
-    <div className="card">
+    <div className={styles.card}>
       <h1>{expense.title}</h1>
       <p>{expense.category}</p>
 
