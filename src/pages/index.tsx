@@ -1,10 +1,16 @@
-import type { Expense, CategoryType } from "../types/index";
+import type { Expense, CategoryType, Category } from "../types/index";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { expensesDB } from "../utils/db";
 import { ExpenseList } from "@/components/ExpenseList";
 import { useState } from "react";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { ExpenseForm } from "@/components/ExpenseForm";
 
+type NewExpenseInput = {
+  title: string;
+  amount: number;
+  category: Category;
+};
 type HomeProps = {
   expenses: Expense[];
 };
@@ -37,6 +43,21 @@ export default function Home({ expenses }: InferGetServerSidePropsType<typeof ge
     }
   }
 
+  async function handleAddExpense(expense: NewExpenseInput) {
+    setError(null);
+    try {
+      const response = await fetch("/api/expenses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(expense),
+      });
+      if (!response.ok) throw new Error("Failed to add expense");
+      await handlerefresh();
+    } catch {
+      setError("Error while adding expense");
+    }
+  }
+
   const filteredExpenses = moneyExpense.filter((expense) => {
     return category === "All" || category === expense.category;
   });
@@ -45,13 +66,19 @@ export default function Home({ expenses }: InferGetServerSidePropsType<typeof ge
     return <h1>...Loading</h1>;
   }
   if (error) {
-    return <h1>{error}</h1>;
+    return (
+      <div>
+        <h1>{error}</h1>
+        <button onClick={handlerefresh}>Refresh</button>
+      </div>
+    );
   }
 
   return (
     <div>
       <h1>Expense Tracker</h1>
       <button onClick={handlerefresh}>Refresh</button>
+      <ExpenseForm onAdd={handleAddExpense} />
       <CategoryFilter onDropDown={setCategory} />
       <ExpenseList expenses={filteredExpenses} />
     </div>
