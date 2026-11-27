@@ -1,6 +1,6 @@
 import type { Expense } from "../types";
 
-export const expensesDB: Expense[] = [
+export let expensesDB: Expense[] = [
   {
     id: "1",
     title: "Lunch at cafe",
@@ -23,3 +23,14 @@ export const expensesDB: Expense[] = [
     date: "2024-06-15",
   },
 ];
+
+export function deleteElementbyID(id: string) {
+  const exist = expensesDB.some((item) => item.id === id);
+
+  if (!exist) {
+    return false;
+  }
+
+  expensesDB = expensesDB.filter((item) => item.id !== id);
+  return true;
+}
