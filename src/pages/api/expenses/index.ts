@@ -23,7 +23,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       title: String(title).trim(),
       amount: amount,
       category,
-      date: Date.now().toString(),
+      date: new Date().toISOString().slice(0, 10),
     };
 
     expensesDB.push(newExpense);

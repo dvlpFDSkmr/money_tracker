@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Expense } from "../types/index";
-import styles from '../styles/componet.module.css'
+import styles from "../styles/componet.module.css";
 
 type ExpenseItemProps = {
   expense: Expense;
@@ -15,7 +15,9 @@ export function ExpenseItem({ expense, onDelete, onEdit }: ExpenseItemProps) {
   async function handleDelete() {
     const response = await fetch("/api/expenses", {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ id: expense.id }),
     });
 
@@ -37,7 +39,9 @@ export function ExpenseItem({ expense, onDelete, onEdit }: ExpenseItemProps) {
 
     const response = await fetch(`/api/expenses/${expense.id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ amount: newAmount }),
     });
 
