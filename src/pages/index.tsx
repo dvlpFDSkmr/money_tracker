@@ -5,6 +5,7 @@ import { ExpenseList } from "@/components/ExpenseList";
 import { useState } from "react";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { ExpenseForm } from "@/components/ExpenseForm";
+import { TotalCard } from "@/components/TotalCard";
 
 type NewExpenseInput = {
   title: string;
@@ -31,13 +32,14 @@ export default function Home({ expenses }: InferGetServerSidePropsType<typeof ge
     setError(null);
 
     try {
-      const response = await fetch("/api/expenses", { cache: "no-store" });
-      if (!response.ok) throw new Error("Failed to load responses");
-
+      const response = await fetch("/api/expenses");
+      if (!response.ok) {
+        throw new Error("Failed to fetch expenses");
+      }
       const data: Expense[] = await response.json();
       setMoneyExpense(data);
     } catch {
-      setError(`Error while fetching`);
+      setError("Error while fetching expenses");
     } finally {
       setIsLoading(false);
     }
@@ -62,22 +64,17 @@ export default function Home({ expenses }: InferGetServerSidePropsType<typeof ge
     return category === "All" || category === expense.category;
   });
 
-  if (isLoading) {
-    return <h1>...Loading</h1>;
-  }
-  if (error) {
-    return (
-      <div>
-        <h1>{error}</h1>
-        <button onClick={handlerefresh}>Refresh</button>
-      </div>
-    );
-  }
-
   return (
     <div>
       <h1>Expense Tracker</h1>
-      <button onClick={handlerefresh}>Refresh</button>
+
+      <button onClick={handlerefresh} disabled={isLoading}>
+        {isLoading ? "Refreshing..." : "Refresh"}
+      </button>
+
+      {error && <p>{error}</p>}
+
+      <TotalCard expenses={moneyExpense} />
       <ExpenseForm onAdd={handleAddExpense} />
       <CategoryFilter onDropDown={setCategory} />
       <ExpenseList expenses={filteredExpenses} />
