@@ -64,6 +64,10 @@ export default function Home({ expenses }: InferGetServerSidePropsType<typeof ge
     setMoneyExpense((prev) => prev.filter((expense) => expense.id !== id));
   }
 
+  function handleEdit(id: string, amount: number) {
+    setMoneyExpense((prev) => prev.map((expense) => (expense.id === id ? { ...expense, amount: amount } : expense)));
+  }
+
   const filteredExpenses = moneyExpense.filter((expense) => {
     return category === "All" || category === expense.category;
   });
@@ -81,7 +85,7 @@ export default function Home({ expenses }: InferGetServerSidePropsType<typeof ge
       <TotalCard expenses={moneyExpense} />
       <ExpenseForm onAdd={handleAddExpense} />
       <CategoryFilter onDropDown={setCategory} />
-      <ExpenseList expenses={filteredExpenses} onDelete={handleDelete} />
+      <ExpenseList expenses={filteredExpenses} onDelete={handleDelete} onEdit={handleEdit} />
     </div>
   );
 }
